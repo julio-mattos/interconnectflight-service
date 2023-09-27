@@ -1,0 +1,23 @@
+server:
+  servlet:
+    context-path: /flight
+
+logging:
+  level:
+    com:
+      ryanair:
+        interconnectflight:
+          clients: DEBUG
+
+
+clients:
+  apiRoutes: https://services-api.ryanair.com/views/locate/3/routes
+  apiSchedule: https://services-api.ryanair.com/timtbl/3/schedules
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic

@@ -1,0 +1,83 @@
+openapi: 3.0.2
+servers:
+  - description: Flight Connection API
+    url: http://localhost:8080/flight
+info:
+  version: "1.0.0"
+  title: Application Flight Interconnection API
+paths:
+  /interconnections:
+    get:
+      summary: find valid interconnections
+      description: >-
+        A list of flights departing from a given departure airport to a given arrival airport.
+      operationId: getInterconnection
+      parameters:
+        - in: query
+          name: departure
+          schema:
+            type: string
+        - in: query
+          name: arrival
+          schema:
+            type: string
+        - in: query
+          name: departureDateTime
+          schema:
+            type: string
+            pattern: \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}
+
+        - in: query
+          name: arrivalDateTime
+          schema:
+            type: string
+            pattern: \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}
+
+      responses:
+        '200':
+          description: 200 success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InterconnectionResponse'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralError'
+components:
+  schemas:
+    GeneralError:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    LegResponse:
+      type: object
+      properties:
+        departureAirport:
+          type: string
+        arrivalAirport:
+          type: string
+        departureDateTime:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$
+        arrivalDateTime:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$
+    InterconnectionResponse:
+      type: object
+      properties:
+        stop:
+          type: integer
+          format: int32
+        legs:
+          type: array
+          items:
+            $ref: '#/components/schemas/LegResponse'
